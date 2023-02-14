@@ -1,9 +1,11 @@
 use bracket_lib::prelude::*;
+use rltk::{Rltk};
 
 struct State {
     y: i32,
     game_over: bool,
     going_down: bool,
+    jumping: bool,
 }
 
 impl GameState for State {
@@ -15,6 +17,8 @@ impl GameState for State {
         	1,
         	1
         );
+
+        player_input(self, ctx);
 
         ctx.cls_bg(RGB::named(WHITE));
         ctx.draw_bar_horizontal(
@@ -43,6 +47,14 @@ impl GameState for State {
             }
         } 
 
+        if self.jumping {
+	        self.y -= 1;
+	        if self.y < 2 {
+	            self.going_down = true;
+	            self.jumping = false
+	        }
+        }
+
         ctx.draw_box(36, 0, 20, 3, RGB::named(WHITE), RGB::named(BLACK));
         ctx.printer(
             55,
@@ -61,6 +73,26 @@ impl GameState for State {
     }
 }
 
+fn player_input(gs: &mut State, ctx: &mut Rltk) {
+    // Player movement
+    match ctx.key {
+        None => {} // Nothing happened
+        Some(key) => match key {
+            VirtualKeyCode::Up => jump(gs),
+            _ => {}
+        },
+    }
+}
+
+
+fn jump(gs: &mut State) {
+ 	if gs.jumping || gs.y < 34 {
+ 		return
+ 	}
+
+ 	gs.jumping = true
+}
+
 fn main() -> BError {
     let context = BTermBuilder::simple80x50()
         .with_title("Hello Bracket World")
@@ -72,7 +104,8 @@ fn main() -> BError {
         // to pause the games animation
         // from happenning
         game_over: false,
-        going_down: true
+        going_down: true,
+        jumping: false
     };
 
     register_palette_color("pink", RGB::named(MAGENTA));
