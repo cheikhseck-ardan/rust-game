@@ -8,30 +8,23 @@ struct State {
     jumping: bool,
 }
 
-impl GameState for State {
-    fn tick(&mut self, ctx: &mut BTerm) {
-        let col2 = RGB::named(YELLOW);
+impl State {
+	fn game_scene(&mut self, ctx: &mut Rltk) {
+    // Player movement
+	    player_input(self, ctx);
 
-        ctx.set_scale(
-        	1.05,
-        	1,
-        	1
-        );
-
-        player_input(self, ctx);
-
-        ctx.cls_bg(RGB::named(WHITE));
-        ctx.draw_bar_horizontal(
+		ctx.cls_bg(RGB::named(WHITE));
+		ctx.draw_bar_horizontal(
 		    0,
 		    40,
 		   	80,
 		    50,
 		    50,
-		    col2,
-		    col2
+		    RGB::named(YELLOW),
+		    RGB::named(YELLOW)
 		);
 
-        ctx.draw_box_double(
+		ctx.draw_box_double(
 		    10,
 		    self.y,
 		    5,
@@ -40,21 +33,32 @@ impl GameState for State {
 		    RGB::named(RED)
 		);
 
-        if self.going_down {
-            self.y += 1;
-            if self.y > 34 {
-                self.going_down = false;
-            }
-        } 
+		if self.going_down {
+		    self.y += 1;
+		    if self.y > 34 {
+		        self.going_down = false;
+		    }
+		} 
 
-        if self.jumping {
-	        self.y -= 1;
-	        if self.y < 2 {
-	            self.going_down = true;
-	            self.jumping = false
-	        }
-        }
+		if self.jumping {
+		    self.y -= 1;
+		    if self.y < 7 {
+		        self.going_down = true;
+		        self.jumping = false
+		    }
+		}
+	}
+}
+impl GameState for State {
+    fn tick(&mut self, ctx: &mut BTerm) {
 
+        ctx.set_scale(
+        	1.05,
+        	1,
+        	1
+        );
+
+        self.game_scene(ctx);
         ctx.draw_box(36, 0, 20, 3, RGB::named(WHITE), RGB::named(BLACK));
         ctx.printer(
             55,
@@ -72,6 +76,8 @@ impl GameState for State {
         );
     }
 }
+
+
 
 fn player_input(gs: &mut State, ctx: &mut Rltk) {
     // Player movement
