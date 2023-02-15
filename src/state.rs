@@ -17,6 +17,19 @@ struct Obstacle {
     pub height: i32
 }
 
+struct Rect {
+    x1: i32,
+    x2: i32,
+    y1: i32,
+    y2: i32,
+}
+
+impl Rect {
+    fn contains(&self, x: i32, y: i32) -> bool {
+        return self.x1 < x && x < self.x2 && self.y1 < y && y < self.y2;
+    }
+}
+
 impl Obstacle {
 	pub fn move_left(&mut self){
 		self.x -= 1
@@ -32,7 +45,7 @@ impl State {
 	        // Game over will be set
 	        // to pause the games animation
 	        // from happenning
-	        game_over: false,
+	        game_over: true,
 	        going_down: true,
 	        jumping: false,
 	        obs : Vec::new(),
@@ -42,7 +55,7 @@ impl State {
 
 	fn game_scene(&mut self, ctx: &mut Rltk) {
   
-	    player_input(self, ctx);
+	   
 	    let elapsed_time = self.time_since_spawn.elapsed();
 
 
@@ -96,6 +109,10 @@ impl State {
 				continue
 			}
 
+			if o.x == 10 {
+				self.game_over = true;
+			}
+
 			ctx.draw_box_double(
 			    o.x,
 			    o.y,
@@ -113,23 +130,33 @@ impl State {
 	pub fn spawn_enemy(&mut self) {
 
 		if self.game_over {
-    		return
+    		return;
     	}
 
     	let mut rng = RandomNumberGenerator::new();
+    	let height = rng.range(3, 25);
 
 		self.obs.push(Obstacle{
-        	y:  35, 
+        	y:  35 - height, 
         	x : 70,
-        	height: rng.range(3, 10)
+        	height: height
         });
 
 
 	}
 
-	/*fn start_screen(&mut self, ctx: &mut Rltk) {
+	fn start_screen(&mut self, ctx: &mut Rltk) {
 
-	}*/
+		ctx.cls_bg(RGB::named(BLACK));
+
+		ctx.printer(
+            40,
+            10,
+            "#[white]Press the Up or Spacebar key to start",
+            TextAlign::Right,
+            None,
+        );
+	}
 
 	
 }
@@ -143,17 +170,19 @@ impl GameState for State {
         	1
         );
 
+        player_input(self, ctx);
+
         if !self.game_over {
         	self.game_scene(ctx);
         } else {
-
+        	self.start_screen(ctx)
         }
 
         ctx.draw_box(36, 0, 20, 7, RGB::named(WHITE), RGB::named(BLACK));
         ctx.printer(
             55,
             1,
-            &format!("#[pink]FPS: #[]{}", ctx.fps),
+            &format!("#FPS: #[]{}", ctx.fps),
             TextAlign::Right,
             None,
         );
@@ -164,6 +193,8 @@ impl GameState for State {
             TextAlign::Right,
             None,
         );
+
+        
     }
 }
 
@@ -180,6 +211,13 @@ fn player_input(gs: &mut State, ctx: &mut Rltk) {
 }
 
 fn jump(gs: &mut State) {
+
+	if gs.game_over {
+		gs.game_over = false;
+		gs.obs = Vec::new();
+		return
+	}
+
  	if gs.jumping || gs.y < 34 {
  		return
  	}
