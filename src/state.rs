@@ -109,9 +109,17 @@ impl State {
 				continue
 			}
 
-			if o.x == 10 {
-				self.game_over = true;
+			let rect = Rect {
+				x1: o.x - 2,
+				y1: o.y - (o.height/2),
+				x2: o.x + 2,
+				y2: o.y + (o.height/2),
+			};
+
+			if rect.contains(5, self.y) {
+				self.game_over = true
 			}
+			
 
 			ctx.draw_box_double(
 			    o.x,
@@ -137,7 +145,7 @@ impl State {
     	let height = rng.range(3, 25);
 
 		self.obs.push(Obstacle{
-        	y:  35 - height, 
+        	y:  40 - height, 
         	x : 70,
         	height: height
         });
