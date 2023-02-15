@@ -1,6 +1,6 @@
 use bracket_lib::prelude::*;
 use rltk::{Rltk};
-use std::time::{Instant, Duration};
+use std::time::Instant;
 
 pub struct State {
     y: i32,
@@ -11,10 +11,16 @@ pub struct State {
     time_since_spawn : Instant
 }
 
-#[derive(Debug)]
 struct Obstacle {
     pub y: i32,
     pub x: i32,
+    pub height: i32
+}
+
+impl Obstacle {
+	pub fn move_left(&mut self){
+		self.x -= 1
+	}
 }
 
 impl State {
@@ -40,7 +46,7 @@ impl State {
 	    let elapsed_time = self.time_since_spawn.elapsed();
 
 
-	    if elapsed_time.as_secs() > 5 {
+	    if elapsed_time.as_secs() > 2 {
 	    	self.spawn_enemy();
 	    	self.time_since_spawn = Instant::now()
 	    }
@@ -81,6 +87,27 @@ impl State {
 		}
 
 		// Begin code to move obstacles
+		// Filter obstacles out of screen
+		self.obs.retain(|o| o.x > 0);
+
+		for o in self.obs.iter_mut() {
+
+			if o.x < 0 {
+				continue
+			}
+
+			ctx.draw_box_double(
+			    o.x,
+			    o.y,
+			    3,
+			    o.height,
+			    RGB::named(BLUE),
+			    RGB::named(BLUE)
+			);
+			o.move_left();
+		}
+
+		
 	}
 
 	pub fn spawn_enemy(&mut self) {
@@ -89,20 +116,20 @@ impl State {
     		return
     	}
 
-		let mut rng = RandomNumberGenerator::new();
+    	let mut rng = RandomNumberGenerator::new();
 
 		self.obs.push(Obstacle{
-        	y: rng.range(7, 35), // set random Y positon for obs.
-        	x : 20
+        	y:  35, 
+        	x : 70,
+        	height: rng.range(3, 10)
         });
 
-        print!("Found {:?}", self.obs)
 
 	}
 
-	fn start_screen(&mut self, ctx: &mut Rltk) {
+	/*fn start_screen(&mut self, ctx: &mut Rltk) {
 
-	}
+	}*/
 
 	
 }

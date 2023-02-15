@@ -1,5 +1,4 @@
 use bracket_lib::prelude::*;
-use rltk::{Rltk};
 mod state;
 
 mod prelude {
