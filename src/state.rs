@@ -39,7 +39,6 @@ impl Obstacle {
 impl State {
 
 	pub fn new() -> Self {
-
 		return Self {
 	        y: 1,
 	        // Game over will be set
@@ -56,10 +55,10 @@ impl State {
 	fn game_scene(&mut self, ctx: &mut Rltk) {
   
 	   
-	    let elapsed_time = self.time_since_spawn.elapsed();
+	    let elapsed_timed = self.time_since_spawn.elapsed();
 
 
-	    if elapsed_time.as_secs() > 2 {
+	    if elapsed_timed.as_secs() > 2 {
 	    	self.spawn_enemy();
 	    	self.time_since_spawn = Instant::now()
 	    }
