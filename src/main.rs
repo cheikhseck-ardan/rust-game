@@ -12,12 +12,6 @@ impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         let col2 = RGB::named(YELLOW);
 
-        ctx.set_scale(
-        	1.05,
-        	1,
-        	1
-        );
-
         player_input(self, ctx);
 
         ctx.cls_bg(RGB::named(WHITE));
