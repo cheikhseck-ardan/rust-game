@@ -10,7 +10,6 @@ struct State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        let col2 = RGB::named(YELLOW);
 
         player_input(self, ctx);
 
@@ -21,8 +20,8 @@ impl GameState for State {
 		   	80,
 		    50,
 		    50,
-		    col2,
-		    col2
+		    RGB::named(YELLOW),
+		    RGB::named(YELLOW),
 		);
 
         ctx.draw_box_double(
