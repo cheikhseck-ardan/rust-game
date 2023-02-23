@@ -8,6 +8,26 @@ struct State {
     jumping: bool,
 }
 
+fn jump(gs: &mut State) {
+    if gs.jumping || gs.y < 34 {
+        return
+    }
+
+    gs.jumping = true
+}
+
+fn player_input(gs: &mut State, ctx: &mut Rltk) {
+    // Player movement
+    match ctx.key {
+        None => {} // Nothing happened
+        Some(key) => match key {
+            VirtualKeyCode::Up => jump(gs),
+            VirtualKeyCode::Space => jump(gs),
+            _ => {}
+        },
+    }
+}
+
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
 
@@ -66,26 +86,6 @@ impl GameState for State {
     }
 }
 
-fn player_input(gs: &mut State, ctx: &mut Rltk) {
-    // Player movement
-    match ctx.key {
-        None => {} // Nothing happened
-        Some(key) => match key {
-            VirtualKeyCode::Up => jump(gs),
-            VirtualKeyCode::Space => jump(gs),
-            _ => {}
-        },
-    }
-}
-
-
-fn jump(gs: &mut State) {
- 	if gs.jumping || gs.y < 34 {
- 		return
- 	}
-
- 	gs.jumping = true
-}
 
 fn main() -> BError {
     let context = BTermBuilder::simple80x50()
