@@ -8,21 +8,21 @@ struct State {
     jumping: bool,
 }
 
-fn jump(gs: &mut State) {
-    if gs.jumping || gs.y < 34 {
+fn jump(state: &mut State) {
+    if state.jumping || state.y < 34 {
         return
     }
 
-    gs.jumping = true
+    state.jumping = true
 }
 
-fn player_input(gs: &mut State, ctx: &mut Rltk) {
+fn player_input(state: &mut State, ctx: &mut Rltk) {
     // Player movement
     match ctx.key {
         None => {} // Nothing happened
         Some(key) => match key {
-            VirtualKeyCode::Up => jump(gs),
-            VirtualKeyCode::Space => jump(gs),
+            VirtualKeyCode::Up => jump(state),
+            VirtualKeyCode::Space => jump(state),
             _ => {}
         },
     }
