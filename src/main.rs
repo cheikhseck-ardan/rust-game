@@ -15,8 +15,8 @@ const MOVING_DOWN: i32 = 2;
 // =============================================================================
 
 struct State {
-     y:       i32,  // Box's veritical position.
-     moving:  i32,  // Direction the box is moving.
+     box_y:       i32,  // Box's veritical position.
+     box_moving:  i32,  // Direction the box is moving.
 }
 
 // =============================================================================
@@ -27,8 +27,8 @@ fn main() -> BError {
         .build()?;
 
     let gs: State = State {
-        y:      GROUND_COLLISION,
-        moving: MOVING_NONE,
+        box_y:      GROUND_COLLISION,
+        box_moving: MOVING_NONE,
     };
 
     register_palette_color("pink", RGB::named(MAGENTA));
@@ -41,8 +41,8 @@ fn player_input(state: &mut State, ctx: &mut Rltk) {
         None => {}
         Some(key) => match key {
             VirtualKeyCode::Space => {
-                if state.y == GROUND_COLLISION {
-                    state.moving = MOVING_UP;
+                if state.box_y == GROUND_COLLISION {
+                    state.box_moving = MOVING_UP;
                 }
             },
             _ => {},
@@ -78,24 +78,24 @@ impl GameState for State {
 
         ctx.draw_box_double(
             10,              // x
-            self.y,          // y
+            self.box_y,          // y
             BOX_HEIGHTWIDTH, // width
             BOX_HEIGHTWIDTH, // height
             RGB::named(RED), // foreground color
             RGB::named(RED), // background color
 		);
 
-        if self.moving == MOVING_DOWN {
-            self.y += 1;
-            if self.y == GROUND_COLLISION {
-                self.moving = MOVING_NONE;
+        if self.box_moving == MOVING_DOWN {
+            self.box_y += 1;
+            if self.box_y == GROUND_COLLISION {
+                self.box_moving = MOVING_NONE;
             }
         }
 
-        if self.moving == MOVING_UP {
-	        self.y -= 1;
-	        if self.y == TOP_SCREEN_PIXEL {
-	            self.moving = MOVING_DOWN;
+        if self.box_moving == MOVING_UP {
+	        self.box_y -= 1;
+	        if self.box_y == TOP_SCREEN_PIXEL {
+	            self.box_moving = MOVING_DOWN;
 	        }
         }
 
