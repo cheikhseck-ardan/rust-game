@@ -38,8 +38,8 @@ impl GameState for State {
         ctx.cls_bg(RGB::named(WHITE));
         
         ctx.draw_bar_horizontal(
-            0,                  // sx
-            TOP_SCREEN_PIXEL,   // sy
+            0,                  // x
+            TOP_SCREEN_PIXEL,   // y
             GROUND_WIDTH,       // width
             GAME_WINDOW,        // n
             GAME_WINDOW,        // max
@@ -48,8 +48,8 @@ impl GameState for State {
 		);
 
         ctx.draw_bar_horizontal(
-            0,                  // sx
-            GROUND_PIXEL,       // sy
+            0,                  // x
+            GROUND_PIXEL,       // y
             GROUND_WIDTH,       // width
             GAME_WINDOW,        // n
             GAME_WINDOW,        // max
