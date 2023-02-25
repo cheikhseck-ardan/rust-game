@@ -1,5 +1,5 @@
 use bracket_lib::prelude::*;
-use rltk::{Rltk};
+use rltk::Rltk;
 
 const TOP_SCREEN_PIXEL: i32 = 8;
 const BOX_HEIGHTWIDTH:  i32 = 5;
