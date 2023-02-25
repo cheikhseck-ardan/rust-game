@@ -2,10 +2,10 @@ use bracket_lib::prelude::*;
 use rltk::{Rltk};
 const GROUND_ON_SCREEN: i32 = 34;
 struct State {
-    y: i32,
-    game_over: bool,
-    going_down: bool,
-    jumping: bool,
+     y:          i32,  // Specify the player’s Y coordinate on screen.
+     game_over:  bool, // Indicate if the game is over.
+     going_down: bool, // Indicate if the player is moving down.
+     jumping:    bool, // Indicate if the player is jumping.
 }
 
 fn jump(state: &mut State) {
@@ -22,8 +22,7 @@ fn player_input(state: &mut State, ctx: &mut Rltk) {
         None => {} // Nothing happened
         Some(key) => match key {
             VirtualKeyCode::Up => jump(state),
-            VirtualKeyCode::Space => jump(state),
-            _ => {}
+            VirtualKeyCode::Space => jump(state)
         },
     }
 }
