@@ -1,44 +1,58 @@
 use bracket_lib::prelude::*;
 use rltk::{Rltk};
-const GROUND_ON_SCREEN: i32 = 34;
+
+const TOP_SCREEN_PIXEL: i32 = 8;
+const BOX_HEIGHTWIDTH:  i32 = 5;
+const GROUND_PIXEL:     i32 = 45;
+const GROUND_WIDTH:     i32 = 80;
+const GAME_WINDOW:      i32 = 50;
+const GROUND_COLLISION: i32 = GROUND_PIXEL-BOX_HEIGHTWIDTH;
+
+const MOVING_NONE: i32 = 0;
+const MOVING_UP:   i32 = 1;
+const MOVING_DOWN: i32 = 2;
+
 struct State {
-     y:          i32,  // Specify the player’s Y coordinate on screen.
-     game_over:  bool, // Indicate if the game is over.
-     going_down: bool, // Indicate if the player is moving down.
-     jumping:    bool, // Indicate if the player is jumping.
-}
-
-fn jump(state: &mut State) {
-    if state.y < GROUND_ON_SCREEN {
-        return
-    }
-
-    state.jumping = true
+     y:       i32,  // Box's veritical position.
+     moving:  i32,  // Direction the box is moving.
 }
 
 fn player_input(state: &mut State, ctx: &mut Rltk) {
-    // Player movement
     match ctx.key {
-        None => {} // Nothing happened
+        None => {}
         Some(key) => match key {
-            VirtualKeyCode::Up => jump(state),
-            VirtualKeyCode::Space => jump(state)
+            VirtualKeyCode::Space => {
+                if state.y == GROUND_COLLISION {
+                    state.moving = MOVING_UP;
+                }
+            },
+            _ => {},
         },
-    }
+    };
 }
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-
         player_input(self, ctx);
 
         ctx.cls_bg(RGB::named(WHITE));
+        
         ctx.draw_bar_horizontal(
             0,                  // sx
-            40,                 // sy
-            80,                 // width
-            50,                 // n
-            50,                 // max
+            TOP_SCREEN_PIXEL,   // sy
+            GROUND_WIDTH,       // width
+            GAME_WINDOW,        // n
+            GAME_WINDOW,        // max
+            RGB::named(YELLOW), // foreground color
+            RGB::named(YELLOW), // background color
+		);
+
+        ctx.draw_bar_horizontal(
+            0,                  // sx
+            GROUND_PIXEL,       // sy
+            GROUND_WIDTH,       // width
+            GAME_WINDOW,        // n
+            GAME_WINDOW,        // max
             RGB::named(YELLOW), // foreground color
             RGB::named(YELLOW), // background color
 		);
@@ -46,24 +60,23 @@ impl GameState for State {
         ctx.draw_box_double(
             10,              // x
             self.y,          // y
-            5,               // width
-            5,               // height
+            BOX_HEIGHTWIDTH, // width
+            BOX_HEIGHTWIDTH, // height
             RGB::named(RED), // foreground color
-            RGB::named(RED)  // background color
+            RGB::named(RED), // background color
 		);
 
-        if self.going_down {
+        if self.moving == MOVING_DOWN {
             self.y += 1;
-            if self.y > 34 {
-                self.going_down = false;
+            if self.y == GROUND_COLLISION {
+                self.moving = MOVING_NONE;
             }
-        } 
+        }
 
-        if self.jumping {
+        if self.moving == MOVING_UP {
 	        self.y -= 1;
-	        if self.y < 2 {
-	            self.going_down = true;
-	            self.jumping = false
+	        if self.y == TOP_SCREEN_PIXEL {
+	            self.moving = MOVING_DOWN;
 	        }
         }
 
@@ -85,20 +98,14 @@ impl GameState for State {
     }
 }
 
-
 fn main() -> BError {
     let context = BTermBuilder::simple80x50()
         .with_title("Hello Bracket World")
         .build()?;
 
     let gs: State = State {
-        y: 1,
-        // Game over will be set
-        // to pause the games animation
-        // from happenning
-        game_over: false,
-        going_down: true,
-        jumping: false
+        y:      GROUND_COLLISION,
+        moving: MOVING_NONE,
     };
 
     register_palette_color("pink", RGB::named(MAGENTA));
