@@ -12,9 +12,28 @@ const MOVING_NONE: i32 = 0;
 const MOVING_UP:   i32 = 1;
 const MOVING_DOWN: i32 = 2;
 
+// =============================================================================
+
 struct State {
      y:       i32,  // Box's veritical position.
      moving:  i32,  // Direction the box is moving.
+}
+
+// =============================================================================
+
+fn main() -> BError {
+    let context = BTermBuilder::simple80x50()
+        .with_title("Hello Bracket World")
+        .build()?;
+
+    let gs: State = State {
+        y:      GROUND_COLLISION,
+        moving: MOVING_NONE,
+    };
+
+    register_palette_color("pink", RGB::named(MAGENTA));
+
+    main_loop(context, gs)
 }
 
 fn player_input(state: &mut State, ctx: &mut Rltk) {
@@ -96,19 +115,4 @@ impl GameState for State {
             None,
         );
     }
-}
-
-fn main() -> BError {
-    let context = BTermBuilder::simple80x50()
-        .with_title("Hello Bracket World")
-        .build()?;
-
-    let gs: State = State {
-        y:      GROUND_COLLISION,
-        moving: MOVING_NONE,
-    };
-
-    register_palette_color("pink", RGB::named(MAGENTA));
-
-    main_loop(context, gs)
 }
