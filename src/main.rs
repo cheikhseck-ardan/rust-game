@@ -35,22 +35,22 @@ impl GameState for State {
 
         ctx.cls_bg(RGB::named(WHITE));
         ctx.draw_bar_horizontal(
-		    0,
-		    40,
-		   	80,
-		    50,
-		    50,
-		    RGB::named(YELLOW),
-		    RGB::named(YELLOW),
+            0,                  // sx
+            40,                 // sy
+            80,                 // width
+            50,                 // n
+            50,                 // max
+            RGB::named(YELLOW), // foreground color
+            RGB::named(YELLOW), // background color
 		);
 
         ctx.draw_box_double(
-		    10,
-		    self.y,
-		    5,
-		    5,
-		    RGB::named(RED),
-		    RGB::named(RED)
+            10,              // x
+            self.y,          // y
+            5,               // width
+            5,               // height
+            RGB::named(RED), // foreground color
+            RGB::named(RED)  // background color
 		);
 
         if self.going_down {
