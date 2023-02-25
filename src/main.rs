@@ -22,7 +22,8 @@ fn player_input(state: &mut State, ctx: &mut Rltk) {
         None => {} // Nothing happened
         Some(key) => match key {
             VirtualKeyCode::Up => jump(state),
-            VirtualKeyCode::Space => jump(state)
+            VirtualKeyCode::Space => jump(state),
+            _ => {}
         },
     }
 }
