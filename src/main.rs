@@ -1,6 +1,6 @@
 use bracket_lib::prelude::*;
 use rltk::{Rltk};
-
+const GROUND_ON_SCREEN: i32 = 34;
 struct State {
     y: i32,
     game_over: bool,
@@ -9,7 +9,7 @@ struct State {
 }
 
 fn jump(state: &mut State) {
-    if state.jumping || state.y < 34 {
+    if state.y < GROUND_ON_SCREEN {
         return
     }
 
