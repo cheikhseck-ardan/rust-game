@@ -1,12 +1,13 @@
-// State contains all the game state and logic.
+//! State contains all the game state and logic.
 
-pub const TOP_SCREEN_PIXEL: i32 = 8;
-pub const BOX_HEIGHTWIDTH: i32 = 5;
-pub const GROUND_PIXEL: i32 = 45;
-pub const GROUND_WIDTH: i32 = 80;
-pub const GAME_WINDOW: i32 = 50;
-pub const GROUND_COLLISION: i32 = GROUND_PIXEL - BOX_HEIGHTWIDTH;
+const TOP_SCREEN_PIXEL: i32 = 8;
+const BOX_HEIGHTWIDTH: i32 = 5;
+const GROUND_PIXEL: i32 = 45;
+const GROUND_WIDTH: i32 = 80;
+const GAME_WINDOW: i32 = 50;
+const GROUND_COLLISION: i32 = GROUND_PIXEL - BOX_HEIGHTWIDTH;
 
+/// Moving represents the set of possible moving options.
 enum Moving {
     Not,
     Up,
@@ -15,11 +16,13 @@ enum Moving {
 
 // =============================================================================
 
+/// State represents the game state for the game.
 pub struct State {
     box_y: i32,         // Box's veritical position.
     box_moving: Moving, // Direction the box is moving.
 }
 
+/// new constructs a new game state.
 pub fn new() -> State {
     return State {
         box_y: GROUND_COLLISION,
@@ -27,32 +30,34 @@ pub fn new() -> State {
     };
 }
 
+/// State implementation of the GameState trait.
 impl rltk::GameState for State {
-    fn tick(&mut self, ctx: &mut rltk::BTerm) {
-        self.keyboard_input(ctx);
-        self.render(ctx);
+    fn tick(&mut self, bterm: &mut rltk::BTerm) {
+        self.keyboard_input(bterm);
+        self.render(bterm);
     }
 }
 
+/// Method set for the State type.
 impl State {
-    fn keyboard_input(&mut self, ctx: &mut rltk::Rltk) {
-        match ctx.key {
+    /// keyboard_input handles the processing of keyboard input.
+    fn keyboard_input(&mut self, rltk: &mut rltk::Rltk) {
+        match rltk.key {
             None => {}
-            Some(key) => match key {
-                rltk::VirtualKeyCode::Space => {
-                    if self.box_y == GROUND_COLLISION {
-                        self.box_moving = Moving::Up;
-                    }
+            Some(rltk::VirtualKeyCode::Space) => {
+                if self.box_y == GROUND_COLLISION {
+                    self.box_moving = Moving::Up;
                 }
-                _ => {}
-            },
+            }
+            _ => {}
         };
     }
 
-    fn render(&mut self, ctx: &mut rltk::BTerm) {
-        ctx.cls_bg(rltk::RGB::named(rltk::WHITE));
+    /// render takes the current game state and renders the screen.
+    fn render(&mut self, bterm: &mut rltk::BTerm) {
+        bterm.cls_bg(rltk::RGB::named(rltk::WHITE));
 
-        ctx.draw_bar_horizontal(
+        bterm.draw_bar_horizontal(
             0,                              // x
             TOP_SCREEN_PIXEL,               // y
             GROUND_WIDTH,                   // width
@@ -62,7 +67,7 @@ impl State {
             rltk::RGB::named(rltk::YELLOW), // background color
         );
 
-        ctx.draw_bar_horizontal(
+        bterm.draw_bar_horizontal(
             0,                              // x
             GROUND_PIXEL,                   // y
             GROUND_WIDTH,                   // width
@@ -72,7 +77,7 @@ impl State {
             rltk::RGB::named(rltk::YELLOW), // background color
         );
 
-        ctx.draw_box_double(
+        bterm.draw_box_double(
             10,                          // x
             self.box_y,                  // y
             BOX_HEIGHTWIDTH,             // width
@@ -97,7 +102,7 @@ impl State {
             _ => {}
         }
 
-        ctx.draw_box(
+        bterm.draw_box(
             36,
             0,
             20,
@@ -106,18 +111,18 @@ impl State {
             rltk::RGB::named(rltk::BLACK),
         );
 
-        ctx.printer(
+        bterm.printer(
             55,
             1,
-            &format!("#[pink]FPS: #[]{}", ctx.fps),
+            &format!("#[pink]FPS: #[]{}", bterm.fps),
             rltk::TextAlign::Right,
             None,
         );
 
-        ctx.printer(
+        bterm.printer(
             55,
             5,
-            &format!("#[pink]Frame Time: #[]{} ms", ctx.frame_time_ms),
+            &format!("#[pink]Frame Time: #[]{} ms", bterm.frame_time_ms),
             rltk::TextAlign::Right,
             None,
         );

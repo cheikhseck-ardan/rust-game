@@ -3,9 +3,9 @@
 pub mod state;
 
 fn main() -> rltk::BError {
-    let context = rltk::BTermBuilder::simple80x50()
+    let bterm = rltk::BTermBuilder::simple80x50()
         .with_title("Hello Bracket World")
         .build()?;
 
-    return rltk::main_loop(context, state::new());
+    return rltk::main_loop(bterm, state::new());
 }
