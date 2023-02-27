@@ -7,5 +7,5 @@ fn main() -> rltk::BError {
         .with_title("Hello Bracket World")
         .build()?;
 
-    rltk::main_loop(context, state::new())
+    return rltk::main_loop(context, state::new());
 }
