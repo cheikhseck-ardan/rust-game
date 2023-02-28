@@ -18,7 +18,7 @@ enum Moving {
 
 /// State represents the game state for the game.
 pub struct State {
-    box_y: i32,         // Box's veritical position.
+    box_y: i32,         // Box's vertical position.
     box_moving: Moving, // Direction the box is moving.
 }
 
