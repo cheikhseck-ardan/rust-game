@@ -1,5 +1,3 @@
-// main initialized the game and starts the game loop.
-
 pub mod state;
 
 fn main() -> rltk::BError {
