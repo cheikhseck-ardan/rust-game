@@ -1,9 +1,19 @@
 pub mod state;
 
-fn main() -> rltk::BError {
+fn main() {
     let bterm = rltk::BTermBuilder::simple80x50()
         .with_title("Hello Bracket World")
-        .build()?;
+        .build();
 
-    return rltk::main_loop(bterm, state::new());
+    match bterm {
+        Ok(rltk) => {
+            let _ = rltk::main_loop(rltk, state::new());
+        }
+        Err(error) => {
+            println!("An error has occurred: {error:?}");
+            println!("Aborting");
+        }
+    }
+
+    return;
 }
