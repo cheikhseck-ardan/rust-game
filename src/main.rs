@@ -14,6 +14,4 @@ fn main() {
             println!("Aborting");
         }
     }
-
-    return;
 }
